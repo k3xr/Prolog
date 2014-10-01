@@ -68,9 +68,42 @@ abuelos_paternos(A1,A2,X) :-
 		padres(A1,A2,P).
 		
 
-% abuelo/2: predicado que es cierto si la persona indicada por el segundo argumento tiene como abuelo la prersona indicada
+% abuelo/2: predicado que es cierto si la persona indicada por el segundo argumento tiene como abuelo la persona indicada
 % por el primer argumento
+
 abuelo(A,X) :-
 		abuelos_maternos(A,_,X).
+		
+abuelo(A,X) :-
+		abuelos_maternos(_,A,X).
+		
+abuelo(A,X) :-
+		abuelos_paternos(A,_,X).
+		
+abuelo(A,X) :-
+		abuelos_paternos(_,A,X).
+		
 
+% nieto/2: predicado que es cierto si la persona indicada por el segundo argumento tiene como nieto a la persona indicada
+% por el primer argumento
+
+nieto(N,X) :-
+		abuelo(X,N).
+		
+% ascendiente/2: predicado que es cierto si la persona indicada por el segundo argumento tiene como ascendiente a la persona indicada
+% por el primer argumento
+
+ascendiente(A,X) :-
+		padres(A,_,X).
+		
+ascendiente(A,X) :-
+		padres(_,A,X).
+		
+ascendiente(A,X) :-
+		padres(P,_,X),
+		ascendiente(A,P).
+		
+ascendiente(A,X) :-
+		padres(_,P,X),
+		ascendiente(A,P).
 		
