@@ -1,6 +1,5 @@
 :-module(_,_).
 
-
 % padres(Padre, Madre, Hijo). 
 % padres/3: predicado que es cierto si la persona indicada por el tercer argumento tiene como padre
 % la persona indicada por el primer argumento, y tiene como madre la persona indicada por el segundo argumento
@@ -23,8 +22,13 @@ padres(pepe, maite2, fabio).
 % indicada por el segundo argumento son hermanos
 
 hermanos(X,Y) :-
-		padres(P,M,X),
-		padres(P,M,Y),
+		padres(P,_,X),
+		padres(P,_,Y),
+		X\=Y.
+		
+hermanos(X,Y) :-
+		padres(_,M,X),
+		padres(_,M,Y),
 		X\=Y.
 
 
