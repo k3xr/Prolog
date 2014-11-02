@@ -11,7 +11,7 @@ lt(s(N), s(M)) :-
 	lt(N, M).
 
 gt(s(N), 0) :-
-	nat(s(N).
+	nat(s(N)).
 gt(s(N), s(M)) :-
 	gt(N, M).
 
