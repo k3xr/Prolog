@@ -1,4 +1,4 @@
-:-module(_,_).
+﻿:-module(_,_).
 
 % Define a binary digit type.
 bind(0).

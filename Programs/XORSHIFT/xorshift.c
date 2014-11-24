@@ -1,8 +1,8 @@
-/* Simple C implementation of the xorshift algorithm for encrypting/decrypting 16-bit blocks of data using a 64-bit key.
+﻿/* Simple C implementation of the xorshift algorithm for encrypting/decrypting 16-bit blocks of data using a 64-bit key.
 
  *
 
- * Who: Miguel Garc�a Remesal (mgremesal@fi.upm.es)
+ * Who: Miguel García Remesal (mgremesal@fi.upm.es)
 
  * When: November 7, 2014.
 
