@@ -124,7 +124,7 @@ nibble_conversion(H,B):-
 
 byte_list([]).
 byte_list([L|Ls]) :-
-	L,
+	byte(L),
 	byte_list(Ls).
 
 % byte_list_conversion(HL, BL)
@@ -135,13 +135,5 @@ byte_list_conversion([],[]).
 byte_list_conversion([HL|HLs], [BL|BLs]) :-
 	byte_list([HL|HLs]),	%Comprueba que la lista es de bytes
 	byte_list([BL|BLs]),
-	%byte_conversion(HL,BL),
+	byte_conversion(HL,BL),
 	byte_list_conversion(HLs,BLs).
-	
-% byte_conversion(HexByte, BinByte)
-% Dependencias: posible ?get_nth_bit_from_byte 
-% Este predicado es cierto si el byte hexadecimal que aparece en el primer argumento tiene 
-% como representación binaria el byte binario que aparece en el segundo argumento.
-
-%byte_conversion([],[]).
-%byte_conversion()
