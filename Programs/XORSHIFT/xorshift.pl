@@ -66,6 +66,7 @@ bin_c([bind(1),bind(1),bind(0),bind(0)]).
 bin_d([bind(1),bind(1),bind(0),bind(1)]).
 bin_e([bind(1),bind(1),bind(1),bind(0)]).
 bin_f([bind(1),bind(1),bind(1),bind(1)]).
+
 % Define a byte type either as a binary byte or as an hex byte.
 byte(BB) :-
 	binary_byte(BB).
@@ -79,10 +80,24 @@ hex_byte([hexd(H1), hexd(H0)]) :-
 	hexd(H1),	
 	hexd(H0).
 	
-% IMPLEMENTAR:
+% TODO:
 % xorshift_encrypt()
 % xorshift_decrypt()
+% byte_list_clsh(L, CLShL)
+% byte_list_crsh(L, CRShL)
+% byte_xor(B1, B2, B3)
+% xorshift_encrypt(ClearData, EncKey, EncData)
+% xorshift_decrypt(EncData, EncKey, ClearData)
 
+% byte_list(L)
+% Este predicado es cierto si la lista dada en el primer argumento es una lista de bytes (ya sea binarios o hex). 
+% SE ASUME QUE EL PRIMER ELEMENTO DE LA LISTA ES EL BIT MÁS SIGNIFICATIVO, MIENTRAS QUE EL ÚLTIMO ELEMENTO DE LA LISTA SERÍA EL BIT MENOS SIGNIFICATIVO.
+
+byte_list([]).
+byte_list([L|Ls]) :-
+	byte(L),
+	byte_list(Ls).
+	
 % byte_conversion(HexByte, BinByte)
 % Este predicado es cierto si el byte hexadecimal que aparece en el primer argumento 
 % tiene como representación binaria el byte binario que aparece en el segundo argumento.
@@ -109,23 +124,6 @@ nibble_conversion(H,B):-
 	(hex_d(H),bin_d(B));
 	(hex_e(H),bin_e(B));
 	(hex_f(H),bin_f(B)).
-	
-
-% get_nth_bit_from_byte(N, B, BN)
-% byte_list_clsh(L, CLShL)
-% byte_list_crsh(L, CRShL)
-% byte_xor(B1, B2, B3)
-% xorshift_encrypt(ClearData, EncKey, EncData)
-% xorshift_decrypt(EncData, EncKey, ClearData)
-
-% byte_list(L)
-% Este predicado es cierto si la lista dada en el primer argumento es una lista de bytes (ya sea binarios o hex). 
-% SE ASUME QUE EL PRIMER ELEMENTO DE LA LISTA ES EL BIT MÁS SIGNIFICATIVO, MIENTRAS QUE EL ÚLTIMO ELEMENTO DE LA LISTA SERÍA EL BIT MENOS SIGNIFICATIVO.
-
-byte_list([]).
-byte_list([L|Ls]) :-
-	byte(L),
-	byte_list(Ls).
 
 % byte_list_conversion(HL, BL)
 % Este predicado es cierto si la representación binaria de la lista de bytes hexadecimales 
@@ -133,7 +131,17 @@ byte_list([L|Ls]) :-
 
 byte_list_conversion([],[]).
 byte_list_conversion([HL|HLs], [BL|BLs]) :-
-	byte_list([HL|HLs]),	%Comprueba que la lista es de bytes
+	byte_list([HL|HLs]),	% Comprueba que la lista es de bytes
 	byte_list([BL|BLs]),
 	byte_conversion(HL,BL),
 	byte_list_conversion(HLs,BLs).
+	
+% get_nth_bit_from_byte(N, B, BN)
+% Este predicado POLIMÓRFICO es cierto si BN es el dígito binario (bit) número N (N ES UN NÚMERO DE PEANO) del byte B 
+% ya sea este un byte hexadecimal o binario). NOTA: EL ÍNDICE DEL BIT MENOS SIGNIFICATIVO DE UN BYTE NO ES 1, SINO 0.
+
+get_nth_bit_from_byte(0, [B|Bs], B).	
+get_nth_bit_from_byte(s(N), [B|Bs], BN) :-
+	byte([B|Bs]),
+	get_nth_bit_from_byte(N,Bs,BN).
+	

@@ -97,5 +97,3 @@ myreverse([],[]).
 myreverse([X|Xs],Zs) :-
 	myreverse(Xs,Ws),
 	append(Ws,[X],Zs).
-
-

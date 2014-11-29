@@ -7,17 +7,17 @@
 :- module(_,_).
 
 % Empleamos recursividad para poder obtener los prefijos sucesivos de una lista.
-%Especificamos caso base, la lista vacia es el prefijo simpre de cualquier otra lista.
+% Especificamos caso base, la lista vacia es el prefijo simpre de cualquier otra lista.
 prefix([],Ys). 
 
-%Si tenemos un elemento cabeza de lista X y el resto de la lista Xs y otra lista
-%Ys con primera cabeza X. Verificamos que las dos listas contienen la misma cabeza de lista
-%Y que además Xs es todo un prefijo de Ys: prefix([1,2,3],[1,2,3,4,5,6]).
+% Si tenemos un elemento cabeza de lista X y el resto de la lista Xs y otra lista
+% Ys con primera cabeza X. Verificamos que las dos listas contienen la misma cabeza de lista
+% Y que además Xs es todo un prefijo de Ys: prefix([1,2,3],[1,2,3,4,5,6]).
 prefix([X|Xs],[X|Ys]):-  
 	prefix(Xs,Ys). 
 
-%Cualquier lista es sufijo de ella misma
-%Una lista Xs es una lista sufijo de Ys si Xs es sufijo con primer elemento de Ys
+% Cualquier lista es sufijo de ella misma
+% Una lista Xs es una lista sufijo de Ys si Xs es sufijo con primer elemento de Ys
 sufix(Xs,Xs).
 sufix(Xs,[Y|Ys]):-
 	sufix(Xs,Ys).
@@ -80,9 +80,10 @@ mypermutation(Xs,[X|Zs]):-
 	mypermutation(Ys,Zs).
 
 double([],[]).
-double([X|Xs],[X,X|s]):-
+double([X|Xs],[X,X|Zs]):-
 	double(Xs,Zs).
- %Un elemento no es miembro de una lista vacía
+
+% Un elemento no es miembro de una lista vacía
 nomember(X,[]):-
 	X\=[].
 
@@ -99,7 +100,7 @@ nodoubles([X|Xs],Zs):-
 nodoubles([X|Xs],[X|Zs]):-
 	nomember(X,Xs),
 	nodoubles(Xs,Zs).
-%Asociamos pares de listas. Estamos generando estructuras de datos con oficio(X,Y)|Zs)
+% Asociamos pares de listas. Estamos generando estructuras de datos con oficio(X,Y)|Zs)
 associate([],[],[]).
 associate([X|Xs],[Y|Ys],[oficio(X,Y)|Zs]):-
 	associate(Xs,Ys,Zs).
