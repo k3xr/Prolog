@@ -70,8 +70,6 @@ bin_f([bind(1),bind(1),bind(1),bind(1)]).
 % Define a byte type either as a binary byte or as an hex byte.
 byte(BB) :-
 	binary_byte(BB).
-
-
 byte(HB) :-
 	hex_byte(HB).
 	
@@ -81,9 +79,6 @@ hex_byte([hexd(H1), hexd(H0)]) :-
 	hexd(H0).
 	
 % TODO:
-% xorshift_encrypt()
-% xorshift_decrypt()
-% byte_list_clsh(L, CLShL)
 % byte_list_crsh(L, CRShL)
 % byte_xor(B1, B2, B3)
 % xorshift_encrypt(ClearData, EncKey, EncData)
@@ -145,3 +140,12 @@ get_nth_bit_from_byte(s(N), [B|Bs], BN) :-
 	byte([B|Bs]),
 	get_nth_bit_from_byte(N,Bs,BN).
 	
+% byte_list_clsh(L, CLShL)
+% Este predicado POLIMÓRFICO es cierto si CLShL es el resultado de efectuar un desplazamiento circular hacia 
+% la izquierda de la lista de bytes representada por L. Este predicado debe funcionar tanto para listas de bytes
+% hexadecimales como binarias, aunque ambos argumentos deben estar representados EN LA MISMA NOTACIÓN. 
+% En los desplazamientos circulares a la izquierda el bit más significativo del byte más significativo de la lista 
+% L pasa a ser el bit menos significativo del byte menos significativo de la lista CLShL.
+	
+byte_list_clsh(L, CLShL) :-
+	byte_list(L).
