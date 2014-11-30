@@ -135,7 +135,7 @@ byte_list_conversion([HL|HLs], [BL|BLs]) :-
 % Este predicado POLIMÓRFICO es cierto si BN es el dígito binario (bit) número N (N ES UN NÚMERO DE PEANO) del byte B 
 % ya sea este un byte hexadecimal o binario). NOTA: EL ÍNDICE DEL BIT MENOS SIGNIFICATIVO DE UN BYTE NO ES 1, SINO 0.
 
-get_nth_bit_from_byte(0, [B|Bs], B).	
+get_nth_bit_from_byte(0, [B|_], B).	
 get_nth_bit_from_byte(s(N), [B|Bs], BN) :-
 	byte([B|Bs]),
 	get_nth_bit_from_byte(N,Bs,BN).
@@ -147,5 +147,5 @@ get_nth_bit_from_byte(s(N), [B|Bs], BN) :-
 % En los desplazamientos circulares a la izquierda el bit más significativo del byte más significativo de la lista 
 % L pasa a ser el bit menos significativo del byte menos significativo de la lista CLShL.
 	
-byte_list_clsh(L, CLShL) :-
-	byte_list(L).
+% byte_list_clsh(L, CLShL) :-
+%	byte_list(L).
