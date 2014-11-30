@@ -134,8 +134,7 @@ byte_list_conversion([HL|HLs], [BL|BLs]) :-
 % ya sea este un byte hexadecimal o binario). NOTA: EL ÍNDICE DEL BIT MENOS SIGNIFICATIVO DE UN BYTE NO ES 1, SINO 0.
 
 get_nth_bit_from_byte(0, [B|_], B).	
-get_nth_bit_from_byte(s(N), [B|Bs], BN) :-
-	byte([B|Bs]),
+get_nth_bit_from_byte(s(N), [_|Bs], BN) :-
 	get_nth_bit_from_byte(N,Bs,BN).
 	
 % byte_list_clsh(L, CLShL)
