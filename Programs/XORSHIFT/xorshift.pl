@@ -144,5 +144,30 @@ get_nth_bit_from_byte(s(N), [_|Bs], BN) :-
 % En los desplazamientos circulares a la izquierda el bit más significativo del byte más significativo de la lista 
 % L pasa a ser el bit menos significativo del byte menos significativo de la lista CLShL.
 	
-% byte_list_clsh(L, CLShL) :-
-%	byte_list(L).
+byte_list_clsh(L, Shifted) :-
+	my_append(L,Lappended),
+	shift(Lappended,Shifted).
+	
+my_append([], []).
+my_append([L|Ls], As) :-
+    append_tres(L, Ws, As),
+    my_append(Ls, Ws).
+ 
+%Append two list in a third one.
+append_tres([], L, L).
+append_tres([H|T], L, [H|R]) :-
+    append_tres(T, L, R).
+	
+shift(L1,L2):-
+    del(L1,L3),
+    add(L3,L1,L2).
+     
+del([_|Tail],Tail).
+     
+add([],[Head|_],[Head]).
+add([Head|Tail],L1,[Head|L2]):-
+    add(Tail,L1,L2).
+     
+compare_two_list([],[]).
+compare_two_list([L|Rest1],[L|Rest2]):-
+    compare_two_list(Rest1,Rest2).
