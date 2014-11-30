@@ -126,8 +126,6 @@ nibble_conversion(H,B):-
 
 byte_list_conversion([],[]).
 byte_list_conversion([HL|HLs], [BL|BLs]) :-
-	byte_list([HL|HLs]),	% Comprueba que la lista es de bytes
-	byte_list([BL|BLs]),
 	byte_conversion(HL,BL),
 	byte_list_conversion(HLs,BLs).
 	
