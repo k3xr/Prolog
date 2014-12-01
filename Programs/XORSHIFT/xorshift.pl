@@ -1,4 +1,4 @@
-:-module(_,_).
+module(_,_).
 
 % Define a binary digit type.
 bind(0).
@@ -67,6 +67,12 @@ bin_d([bind(1),bind(1),bind(0),bind(1)]).
 bin_e([bind(1),bind(1),bind(1),bind(0)]).
 bin_f([bind(1),bind(1),bind(1),bind(1)]).
 
+% XOR Gate
+xor([bind(0), bind(0), bind(0)]).
+xor([bind(0), bind(1), bind(1)]).
+xor([bind(1), bind(0), bind(1)]).
+xor([bind(1), bind(1), bind(0)]).
+
 % Define a byte type either as a binary byte or as an hex byte.
 byte(BB) :-
 	binary_byte(BB).
@@ -79,7 +85,6 @@ hex_byte([hexd(H1), hexd(H0)]) :-
 	hexd(H0).
 	
 % TODO:
-% byte_xor(B1, B2, B3)
 % xorshift_encrypt(ClearData, EncKey, EncData)
 % xorshift_decrypt(EncData, EncKey, ClearData)
 
@@ -148,7 +153,7 @@ byte_list_clsh([Byte|L], ShiftedAndFormated) :-
 	binary_byte(Byte),
 	my_append([Byte|L],Lappended),
 	shift(Lappended,Shifted),
-	agroup_bit_in_B(Shifted, ShiftedAndFormated).
+	group_bit_in_B(Shifted, ShiftedAndFormated).
 
 byte_list_clsh([Byte|L], ShiftedAndFormatedFromHex) :-
 	%Si es hexadecimal -> Pasamos a binario
@@ -156,14 +161,14 @@ byte_list_clsh([Byte|L], ShiftedAndFormatedFromHex) :-
 	byte_list_conversion([Byte|L], BL),
 	my_append(BL,Lappended),
 	shift(Lappended,Shifted),
-	agroup_bit_in_B(Shifted, ShiftedAndFormated),
+	group_bit_in_B(Shifted, ShiftedAndFormated),
 	byte_list_conversion(ShiftedAndFormatedFromHex, ShiftedAndFormated).
 
-	
-% Crea una lista de sublistas con tamaño de sublista según s(N).
-agroup_bit_in_B([],[]).
-agroup_bit_in_B([B7,B6,B5,B4,B3,B2,B1,B0|Lbits],[[B7,B6,B5,B4,B3,B2,B1,B0]|LBytes]):-
-	agroup_bit_in_B(Lbits, LBytes).	
+%*********************Auxiliar Methods for rotation purposes*************************	
+% Group 8 bytes in a list
+group_bit_in_B([],[]).
+group_bit_in_B([B7,B6,B5,B4,B3,B2,B1,B0|Lbits],[[B7,B6,B5,B4,B3,B2,B1,B0]|LBytes]):-
+	group_bit_in_B(Lbits, LBytes).	
 	
 my_append([], []).
 my_append([L|Ls], As) :-
@@ -186,6 +191,8 @@ del([_|Tail],Tail).
 add([],[Head|_],[Head]).
 add([Head|Tail],L1,[Head|L2]):-
     add(Tail,L1,L2).
+%********************* FIN: Auxiliar Methods for rotation purposes*************************	
+
 	
 % byte_list_crsh/2: byte_list_crsh(L, CRShL).
 % Este predicado POLIMÓRFICO es cierto si CRShL es el resultado de efectuar un 
@@ -201,7 +208,7 @@ byte_list_crsh([Byte|L], ShiftedAndFormated) :-
 	binary_byte(Byte),
 	my_append([Byte|L],Lappended),
 	shift(Shifted, Lappended),
-	agroup_bit_in_B(Shifted, ShiftedAndFormated).
+	group_bit_in_B(Shifted, ShiftedAndFormated).
 	
 byte_list_crsh([Byte|L], ShiftedAndFormatedFromHex) :-
 	%Si es hexadecimal -> Pasamos a binario
@@ -209,5 +216,31 @@ byte_list_crsh([Byte|L], ShiftedAndFormatedFromHex) :-
 	byte_list_conversion([Byte|L], BL),
 	my_append(BL,Lappended),
 	shift(Shifted, Lappended),
-	agroup_bit_in_B(Shifted, ShiftedAndFormated),
+	group_bit_in_B(Shifted, ShiftedAndFormated),
 	byte_list_conversion(ShiftedAndFormatedFromHex, ShiftedAndFormated).
+	
+% byte_xor(B1, B2, B3)
+% Este predicado POLIMÓRFICO es cierto si B3 es el resultado de efectuar la operación lógica XOR 
+% entre los bytes B1 y B2. Este predicado debe funcionar tanto para bytes binarios como hexadecimales, 
+% aunque todos los argumentos deben estar representados EN LA MISMA NOTACIÓN.
+
+byte_xor([], [] ,[]).
+byte_xor(B1, B2, B3):-
+	hex_byte(B1),
+	hex_byte(B2),
+	byte_conversion(B1, BB1),
+	byte_conversion(B2, BB2),
+	xor_gate(BB1, BB2, BBOutput),
+	byte_conversion(B3, BBOutput).
+
+byte_xor(B1, B2, B3):-
+	binary_byte(B1),
+	binary_byte(B2),
+	xor_gate(B1, B2, B3). 
+
+xor_gate([], [],[]).
+xor_gate([BitB1|B1], [BitB2|B2], [BitB3|B3]):-
+	xor([BitB1, BitB2, BitB3]),
+	xor_gate(B1, B2, B3).
+	
+	
