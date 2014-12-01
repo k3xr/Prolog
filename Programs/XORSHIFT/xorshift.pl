@@ -1,4 +1,4 @@
-%:-module(_,_).
+module(_,_).
 
 % Define a binary digit type.
 bind(0).
@@ -85,7 +85,6 @@ hex_byte([hexd(H1), hexd(H0)]) :-
 	hexd(H0).
 	
 % TODO:
-% byte_xor(B1, B2, B3)
 % xorshift_encrypt(ClearData, EncKey, EncData)
 % xorshift_decrypt(EncData, EncKey, ClearData)
 
