@@ -1,4 +1,4 @@
-%:-module(_,_).
+:-module(_,_).
 
 % Define a binary digit type.
 bind(0).
@@ -79,7 +79,6 @@ hex_byte([hexd(H1), hexd(H0)]) :-
 	hexd(H0).
 	
 % TODO:
-% byte_list_crsh(L, CRShL)
 % byte_xor(B1, B2, B3)
 % xorshift_encrypt(ClearData, EncKey, EncData)
 % xorshift_decrypt(EncData, EncKey, ClearData)
@@ -144,10 +143,22 @@ get_nth_bit_from_byte(s(N), [_|Bs], BN) :-
 % En los desplazamientos circulares a la izquierda el bit más significativo del byte más significativo de la lista 
 % L pasa a ser el bit menos significativo del byte menos significativo de la lista CLShL.
 	
-byte_list_clsh(L, ShiftedAndFormated) :-
-	my_append(L,Lappended),
+byte_list_clsh([Byte|L], ShiftedAndFormated) :-
+	%Si es binario.
+	binary_byte(Byte),
+	my_append([Byte|L],Lappended),
 	shift(Lappended,Shifted),
 	agroup_bit_in_B(Shifted, ShiftedAndFormated).
+
+byte_list_clsh([Byte|L], ShiftedAndFormatedFromHex) :-
+	%Si es hexadecimal -> Pasamos a binario
+	hex_byte(Byte),
+	byte_list_conversion([Byte|L], BL),
+	my_append(BL,Lappended),
+	shift(Lappended,Shifted),
+	agroup_bit_in_B(Shifted, ShiftedAndFormated),
+	byte_list_conversion(ShiftedAndFormatedFromHex, ShiftedAndFormated).
+
 	
 % Crea una lista de sublistas con tamaño de sublista según s(N).
 agroup_bit_in_B([],[]).
@@ -175,3 +186,28 @@ del([_|Tail],Tail).
 add([],[Head|_],[Head]).
 add([Head|Tail],L1,[Head|L2]):-
     add(Tail,L1,L2).
+	
+% byte_list_crsh/2: byte_list_crsh(L, CRShL).
+% Este predicado POLIMÓRFICO es cierto si CRShL es el resultado de efectuar un 
+% desplazamiento circular hacia la derecha de la lista de bytes representada por L. 
+% Este predicado debe funcionar tanto para listas de bytes hexadecimales como binarios, 
+% aunque ambos argumentos deben estar representados EN LA MISMA NOTACIÓN. En los 
+% desplazamientos circulares a la derecha el bit menos significativo del byte menos 
+% significativo de L pasa a ser el bit más significativo del byte mas significativo de 
+% la lista CRShL.
+
+byte_list_crsh([Byte|L], ShiftedAndFormated) :-
+	%Si es binario.
+	binary_byte(Byte),
+	my_append([Byte|L],Lappended),
+	shift(Shifted, Lappended),
+	agroup_bit_in_B(Shifted, ShiftedAndFormated).
+	
+byte_list_crsh([Byte|L], ShiftedAndFormatedFromHex) :-
+	%Si es hexadecimal -> Pasamos a binario
+	hex_byte(Byte),
+	byte_list_conversion([Byte|L], BL),
+	my_append(BL,Lappended),
+	shift(Shifted, Lappended),
+	agroup_bit_in_B(Shifted, ShiftedAndFormated),
+	byte_list_conversion(ShiftedAndFormatedFromHex, ShiftedAndFormated).
