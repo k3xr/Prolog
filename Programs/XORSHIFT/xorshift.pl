@@ -144,10 +144,22 @@ get_nth_bit_from_byte(s(N), [_|Bs], BN) :-
 % En los desplazamientos circulares a la izquierda el bit más significativo del byte más significativo de la lista 
 % L pasa a ser el bit menos significativo del byte menos significativo de la lista CLShL.
 	
-byte_list_clsh(L, ShiftedAndFormated) :-
-	my_append(L,Lappended),
+byte_list_clsh([Byte|L], ShiftedAndFormated) :-
+	%Si es binario.
+	binary_byte(Byte),
+	my_append([Byte|L],Lappended),
 	shift(Lappended,Shifted),
 	agroup_bit_in_B(Shifted, ShiftedAndFormated).
+
+byte_list_clsh([Byte|L], ShiftedAndFormatedFromHex) :-
+	%Si es hexadecimal -> Pasamos a binario
+	hex_byte(Byte),
+	byte_list_conversion([Byte|L], BL),
+	my_append(BL,Lappended),
+	shift(Lappended,Shifted),
+	agroup_bit_in_B(Shifted, ShiftedAndFormated),
+	byte_list_conversion(ShiftedAndFormatedFromHex, ShiftedAndFormated).
+
 	
 % Crea una lista de sublistas con tamaño de sublista según s(N).
 agroup_bit_in_B([],[]).
