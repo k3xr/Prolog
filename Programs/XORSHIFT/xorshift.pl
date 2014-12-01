@@ -1,4 +1,4 @@
-:-module(_,_).
+%:-module(_,_).
 
 % Define a binary digit type.
 bind(0).
@@ -144,20 +144,28 @@ get_nth_bit_from_byte(s(N), [_|Bs], BN) :-
 % En los desplazamientos circulares a la izquierda el bit más significativo del byte más significativo de la lista 
 % L pasa a ser el bit menos significativo del byte menos significativo de la lista CLShL.
 	
-byte_list_clsh(L, Shifted) :-
+byte_list_clsh(L, ShiftedAndFormated) :-
 	my_append(L,Lappended),
-	shift(Lappended,Shifted).
+	shift(Lappended,Shifted),
+	agroup_bit_in_B(Shifted, ShiftedAndFormated).
+	
+% Crea una lista de sublistas con tamaño de sublista según s(N).
+agroup_bit_in_B([],[]).
+agroup_bit_in_B([B7,B6,B5,B4,B3,B2,B1,B0|Lbits],[[B7,B6,B5,B4,B3,B2,B1,B0]|LBytes]):-
+	agroup_bit_in_B(Lbits, LBytes).	
 	
 my_append([], []).
 my_append([L|Ls], As) :-
     append_tres(L, Ws, As),
     my_append(Ls, Ws).
  
-%Append two list in a third one.
+% Append two list in a third one.
 append_tres([], L, L).
 append_tres([H|T], L, [H|R]) :-
     append_tres(T, L, R).
 	
+% shift(List1?,List2?)
+% L2 is the left-shifted of L1 OR L1 is the rigth-shifted of L2. L1 and L2 lists.
 shift(L1,L2):-
     del(L1,L3),
     add(L3,L1,L2).
@@ -167,7 +175,3 @@ del([_|Tail],Tail).
 add([],[Head|_],[Head]).
 add([Head|Tail],L1,[Head|L2]):-
     add(Tail,L1,L2).
-     
-compare_two_list([],[]).
-compare_two_list([L|Rest1],[L|Rest2]):-
-    compare_two_list(Rest1,Rest2).
