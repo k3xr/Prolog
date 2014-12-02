@@ -137,10 +137,23 @@ byte_list_conversion([HL|HLs], [BL|BLs]) :-
 % Este predicado POLIMÓRFICO es cierto si BN es el dígito binario (bit) número N (N ES UN NÚMERO DE PEANO) del byte B 
 % ya sea este un byte hexadecimal o binario). NOTA: EL ÍNDICE DEL BIT MENOS SIGNIFICATIVO DE UN BYTE NO ES 1, SINO 0.
 
-get_nth_bit_from_byte(0, [B|_], B).	
-get_nth_bit_from_byte(s(N), [_|Bs], BN) :-
-	get_nth_bit_from_byte(N,Bs,BN).
-	
+get_bit(0, [B|_], B).	
+get_bit(s(N), [_|Bs], BN) :-
+	get_bit(N,Bs,BN).
+
+get_nth_bit_from_byte(N,B,BN):-
+	hex_byte(B),
+	byte_conversion(B,BIND),
+	get_nth_bit_from_byte(N,BIND,BN).
+
+get_nth_bit_from_byte(N,B,BN):-
+	binary_byte(B),
+	get_bit_turn(B,BTURN),
+	get_bit(N,BTURN,BN).
+
+get_bit_turn([B7,B6,B5,B4,B3,B2,B1,B0],[B0,B1,B2,B3,B4,B5,B6,B7]).
+
+
 % byte_list_clsh(L, CLShL)
 % Este predicado POLIMÓRFICO es cierto si CLShL es el resultado de efectuar un desplazamiento circular hacia 
 % la izquierda de la lista de bytes representada por L. Este predicado debe funcionar tanto para listas de bytes
