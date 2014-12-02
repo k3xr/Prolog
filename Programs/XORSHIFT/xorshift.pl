@@ -1,4 +1,4 @@
-%module(_,_).
+:-module(_,_).
 
 % Define a binary digit type.
 bind(0).
@@ -81,9 +81,8 @@ byte(HB) :-
 	
 % Define an hex byte as a list of 2 hex nibbles.
 hex_byte([hexd(H1), hexd(H0)]) :-
-	hexd(H1),	
+	hexd(H1),
 	hexd(H0).
-	
 
 % xorshift_encrypt(ClearData, EncKey, EncData)
 xorshift_encrypt(ClearData, EncKey, EncData):-
@@ -115,7 +114,7 @@ kbyteSel(EncKey,K,KByteSEL):-
 	select_6(EncKey,K,KByteSEL);
 	select_7(EncKey,K,KByteSEL).
 
-%Comprobamos el caso concreto en el que N los tres primeros bits de N son 0 o 7
+%Comprobamos el caso concreto en el que N los tres primeros bits de N son 0 o 7.
 select_0([_,_,_,_,_,_,_,K0],[_,N0],K0):- hex_0(N0);hex_8(N0).
 select_0([_,_,_,_,_,_,_,K0],[_,_,_,_,N3,N2,N1,N0],K0):- bin_0([N3,N2,N1,N0]);bin_8([N3,N2,N1,N0]).
 select_1([_,_,_,_,_,_,K1,_],[_,N0],K1):- hex_1(N0);hex_9(N0).
@@ -132,6 +131,25 @@ select_6([_,K6,_,_,_,_,_,_],[_,N0],K6):- hex_6(N0);hex_e(N0).
 select_6([_,K6,_,_,_,_,_,_],[_,_,_,_,N3,N2,N1,N0],K6):- bin_6([N3,N2,N1,N0]);bin_e([N3,N2,N1,N0]).
 select_7([K7,_,_,_,_,_,_,_],[_,N0],K7):- hex_7(N0);hex_f(N0).
 select_7([K7,_,_,_,_,_,_,_],[_,_,_,_,N3,N2,N1,N0],K7):- bin_7([N3,N2,N1,N0]);bin_f([N3,N2,N1,N0]).
+
+% xorshift_decrypt(EncData, EncKey, ClearData)
+% Este predicado POLIMÓRFICO es cierto si ClearData es una lista de 2 bytes (16 bits) que es el 
+% resultado de aplicar la operación de descifrado XORSHIFT descrita anteriormente a la lista de 
+% 2 bytes (16) bit EncData utilizando la lista de 8 bytes (64 bits) EncKey como clave de descifrado. 
+% Este predicado debe funcionar tanto para listas de bytes binarias como hexadecimales, aunque 
+% todos los argumentos deben estar representados EN LA MISMA NOTACIÓN.
+
+xorshift_decrypt(EncData, EncKey, ClearData):-
+	byte_list(EncData),  %Lista de 2 bytes
+	byte_list(EncKey),   %Lista de 8 Bytes
+	decrypt(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(0)))))))))))))))),EncData,EncKey,ClearData).
+
+decrypt(0,EncData,_,EncData).
+decrypt(s(N),EncData,EncKey,ClearData):-
+	byte_list_clsh(EncData, [DByte1, DByte0]),
+	kbyteSel(EncKey, DByte0,KByteSEL),%En KByteSEL esta el byte de la clave a usar
+	byte_xor(DByte1,KByteSEL,DByte1RESULT),
+	decrypt(N,[DByte1RESULT, DByte0],EncKey,ClearData).
 
 % byte_list(L)
 % Este predicado es cierto si la lista dada en el primer argumento es una lista de bytes (ya sea binarios o hex). 
