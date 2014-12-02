@@ -142,6 +142,31 @@ select_6([_,K6,_,_,_,_,_,_],[_,_,_,_,N3,N2,N1,N0],K6):- bin_6([N3,N2,N1,N0]);bin
 select_7([K7,_,_,_,_,_,_,_],[_,N0],K7):- hex_7(N0);hex_f(N0).
 select_7([K7,_,_,_,_,_,_,_],[_,_,_,_,N3,N2,N1,N0],K7):- bin_7([N3,N2,N1,N0]);bin_f([N3,N2,N1,N0]).
 
+% xorshift_encrypt(ClearData, EncKey, EncData)
+% Este predicado POLIMÓRFICO es cierto si EncData es una lista de 2 bytes (16 bits) que es 
+% el resultado de aplicar la operación de cifrado XORSHIFT descrita anteriormente a la 
+% lista de 2 bytes (16 bits) ClearData utilizando la lista de 8 bytes (64 bits) EncKey como 
+% clave de cifrado. Este predicado debe funcionar tanto para listas de bytes binarias como 
+% hexadecimales, aunque todos los argumentos deben estar representados EN LA MISMA NOTACIÓN.
+
+%xorshift_encrypt(ClearData, EncKey, EncData):-
+	bucle(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(0))))))))))))))), ClearData, EncKey, EncData).
+
+%bucle(s(N), [Clear_Byte1|Clear_Byte0], EncKey, EncData)
+	%And of the three less significant bits from Clear_Byte0 with 0x07(111)
+%	get_nth_bit_from_byte(0, Clear_Byte0, Bit0),
+%	get_nth_bit_from_byte(1, Clear_Byte0, Bit1),
+%	get_nth_bit_from_byte(2, Clear_Byte0, Bit2),
+%	and_gate(Bit0, bind(1), bit0_R),
+%	and_gate(Bit1, bind(1), bit1_R),
+%	and_gate(Bit2, bind(1), bit2_R),
+	
+	
+%	bucle(N, ClearData, EncKey, EncData).
+	
+%	Clear_Byte0 & 0x07
+
+
 % byte_list(L)
 % Este predicado es cierto si la lista dada en el primer argumento es una lista de bytes (ya sea binarios o hex). 
 % SE ASUME QUE EL PRIMER ELEMENTO DE LA LISTA ES EL BIT MÁS SIGNIFICATIVO, MIENTRAS QUE EL ÚLTIMO ELEMENTO DE LA LISTA SERÍA EL BIT MENOS SIGNIFICATIVO.
