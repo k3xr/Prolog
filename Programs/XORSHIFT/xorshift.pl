@@ -84,10 +84,57 @@ hex_byte([hexd(H1), hexd(H0)]) :-
 	hexd(H1),	
 	hexd(H0).
 	
-% TODO:
-% xorshift_encrypt(ClearData, EncKey, EncData)
-% xorshift_decrypt(EncData, EncKey, ClearData)
 
+% xorshift_encrypt(ClearData, EncKey, EncData)
+xorshift_encrypt(ClearData, EncKey, EncData):-
+	byte_list(ClearData), %Lista de dos bytes
+	byte_list(EncKey),    %Lista de 8 Bytes
+	encrypt(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(0)))))))))))))))),ClearData,EncKey,EncData).
+
+encrypt(s(0),[DByte1, DByte0],EncKey,EncData):-
+	kbyteSel(EncKey, DByte0,KByteSEL),
+	byte_xor(DByte1,KByteSEL,DByte1RESULT),
+	byte_list_crsh([DByte1RESULT, DByte0],EncData).
+
+encrypt(s(N),[DByte1, DByte0],EncKey,EncData):-
+	kbyteSel(EncKey, DByte0,KByteSEL),%En KByteSEL esta el byte de la clave a usar
+	byte_xor(DByte1,KByteSEL,DByte1RESULT),
+	byte_list_crsh([DByte1RESULT, DByte0],ClearDataCirc),
+	encrypt(N,ClearDataCirc,EncKey,EncData).
+
+
+%Dividimos el procedimiento de seleccionar en subprocedimientos
+%Sólo se cumplirá uno de los procedimientos select_X
+kbyteSel(EncKey,K,KByteSEL):-
+	select_0(EncKey,K,KByteSEL);
+	select_1(EncKey,K,KByteSEL);
+	select_2(EncKey,K,KByteSEL);
+	select_3(EncKey,K,KByteSEL);
+	select_4(EncKey,K,KByteSEL);
+	select_5(EncKey,K,KByteSEL);
+	select_6(EncKey,K,KByteSEL);
+	select_7(EncKey,K,KByteSEL).
+
+%Comprobamos el caso concreto en el que N los tres primeros bits de N son 0 o 7
+select_0([_,_,_,_,_,_,_,K0],[_,N0],K0):- hex_0(N0);hex_8(N0).
+select_0([_,_,_,_,_,_,_,K0],[_,_,_,_,N3,N2,N1,N0],K0):- bin_0([N3,N2,N1,N0]);bin_8([N3,N2,N1,N0]).
+select_1([_,_,_,_,_,_,K1,_],[_,N0],K1):- hex_1(N0);hex_9(N0).
+select_1([_,_,_,_,_,_,K1,_],[_,_,_,_,N3,N2,N1,N0],K1):- bin_1([N3,N2,N1,N0]);bin_9([N3,N2,N1,N0]).
+select_2([_,_,_,_,_,K2,_,_],[_,N0],K2):- hex_2(N0);hex_a(N0).
+select_2([_,_,_,_,_,K2,_,_],[_,_,_,_,N3,N2,N1,N0],K2):- bin_2([N3,N2,N1,N0]);bin_a([N3,N2,N1,N0]).
+select_3([_,_,_,_,K3,_,_,_],[_,N0],K3):- hex_3(N0);hex_b(N0).
+select_3([_,_,_,_,K3,_,_,_],[_,_,_,_,N3,N2,N1,N0],K3):- bin_3([N3,N2,N1,N0]);bin_b([N3,N2,N1,N0]).
+select_4([_,_,_,K4,_,_,_,_],[_,N0],K4):- hex_4(N0);hex_c(N0).
+select_4([_,_,_,K4,_,_,_,_],[_,_,_,_,N3,N2,N1,N0],K4):- bin_4([N3,N2,N1,N0]);bin_c([N3,N2,N1,N0]).
+select_5([_,_,K5,_,_,_,_,_],[_,N0],K5):- hex_5(N0);hex_d(N0).
+select_5([_,_,K5,_,_,_,_,_],[_,_,_,_,N3,N2,N1,N0],K5):- bin_5([N3,N2,N1,N0]);bin_d([N3,N2,N1,N0]).
+select_6([_,K6,_,_,_,_,_,_],[_,N0],K6):- hex_6(N0);hex_e(N0).
+select_6([_,K6,_,_,_,_,_,_],[_,_,_,_,N3,N2,N1,N0],K6):- bin_6([N3,N2,N1,N0]);bin_e([N3,N2,N1,N0]).
+select_7([K7,_,_,_,_,_,_,_],[_,N0],K7):- hex_7(N0);hex_f(N0).
+select_7([K7,_,_,_,_,_,_,_],[_,_,_,_,N3,N2,N1,N0],K7):- bin_7([N3,N2,N1,N0]);bin_f([N3,N2,N1,N0]).
+
+% TODO:
+% xorshift_decrypt(EncData, EncKey, ClearData)
 % byte_list(L)
 % Este predicado es cierto si la lista dada en el primer argumento es una lista de bytes (ya sea binarios o hex). 
 % SE ASUME QUE EL PRIMER ELEMENTO DE LA LISTA ES EL BIT MÁS SIGNIFICATIVO, MIENTRAS QUE EL ÚLTIMO ELEMENTO DE LA LISTA SERÍA EL BIT MENOS SIGNIFICATIVO.
