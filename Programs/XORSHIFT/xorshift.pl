@@ -73,6 +73,15 @@ xor([bind(0), bind(1), bind(1)]).
 xor([bind(1), bind(0), bind(1)]).
 xor([bind(1), bind(1), bind(0)]).
 
+% AND 
+and_gate([bind(0), bind(0), bind(1)]).
+and_gate([bind(0), bind(1), bind(0)]).
+and_gate([bind(1), bind(0), bind(0)]).
+and_gate([bind(1), bind(1), bind(1)]).
+
+%Equivalent binary 0-7
+
+
 % Define a byte type either as a binary byte or as an hex byte.
 byte(BB) :-
 	binary_byte(BB).
@@ -87,6 +96,31 @@ hex_byte([hexd(H1), hexd(H0)]) :-
 % TODO:
 % xorshift_encrypt(ClearData, EncKey, EncData)
 % xorshift_decrypt(EncData, EncKey, ClearData)
+
+% xorshift_encrypt(ClearData, EncKey, EncData)
+% Este predicado POLIMÓRFICO es cierto si EncData es una lista de 2 bytes (16 bits) que es 
+% el resultado de aplicar la operación de cifrado XORSHIFT descrita anteriormente a la 
+% lista de 2 bytes (16 bits) ClearData utilizando la lista de 8 bytes (64 bits) EncKey como 
+% clave de cifrado. Este predicado debe funcionar tanto para listas de bytes binarias como 
+% hexadecimales, aunque todos los argumentos deben estar representados EN LA MISMA NOTACIÓN.
+
+%xorshift_encrypt(ClearData, EncKey, EncData):-
+	bucle(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(0))))))))))))))), ClearData, EncKey, EncData).
+
+%bucle(s(N), [Clear_Byte1|Clear_Byte0], EncKey, EncData)
+	%And of the three less significant bits from Clear_Byte0 with 0x07(111)
+%	get_nth_bit_from_byte(0, Clear_Byte0, Bit0),
+%	get_nth_bit_from_byte(1, Clear_Byte0, Bit1),
+%	get_nth_bit_from_byte(2, Clear_Byte0, Bit2),
+%	and_gate(Bit0, bind(1), bit0_R),
+%	and_gate(Bit1, bind(1), bit1_R),
+%	and_gate(Bit2, bind(1), bit2_R),
+	
+	
+%	bucle(N, ClearData, EncKey, EncData).
+	
+%	Clear_Byte0 & 0x07
+
 
 % byte_list(L)
 % Este predicado es cierto si la lista dada en el primer argumento es una lista de bytes (ya sea binarios o hex). 
@@ -148,37 +182,27 @@ get_nth_bit_from_byte(s(N), [_|Bs], BN) :-
 % En los desplazamientos circulares a la izquierda el bit más significativo del byte más significativo de la lista 
 % L pasa a ser el bit menos significativo del byte menos significativo de la lista CLShL.
 	
-byte_list_clsh([Byte|L], ShiftedAndFormated) :-
+byte_list_clsh([Byte|ByteList], ShiftedAndFormated) :-
 	%Si es binario.
 	binary_byte(Byte),
-	my_append([Byte|L],Lappended),
-	shift(Lappended,Shifted),
-	group_bit_in_B(Shifted, ShiftedAndFormated).
+	group_bit_in_B(LBits, [Byte|ByteList]),
+	shift(LBits, LbitsShiftados),
+	group_bit_in_B(LbitsShiftados, ShiftedAndFormated).
 
-byte_list_clsh([Byte|L], ShiftedAndFormatedFromHex) :-
+byte_list_clsh([Byte|ByteList], ShiftedAndFormatedFromHex) :-
 	%Si es hexadecimal -> Pasamos a binario
 	hex_byte(Byte),
-	byte_list_conversion([Byte|L], BL),
-	my_append(BL,Lappended),
-	shift(Lappended,Shifted),
-	group_bit_in_B(Shifted, ShiftedAndFormated),
+	byte_list_conversion([Byte|ByteList], BL),
+	group_bit_in_B(LBits, BL),
+	shift(LBits, LbitsShiftados),
+	group_bit_in_B(LbitsShiftados, ShiftedAndFormated),
 	byte_list_conversion(ShiftedAndFormatedFromHex, ShiftedAndFormated).
 
 %*********************Auxiliar Methods for rotation purposes*************************	
 % Group 8 bytes in a list
 group_bit_in_B([],[]).
 group_bit_in_B([B7,B6,B5,B4,B3,B2,B1,B0|Lbits],[[B7,B6,B5,B4,B3,B2,B1,B0]|LBytes]):-
-	group_bit_in_B(Lbits, LBytes).	
-	
-my_append([], []).
-my_append([L|Ls], As) :-
-    append_tres(L, Ws, As),
-    my_append(Ls, Ws).
- 
-% Append two list in a third one.
-append_tres([], L, L).
-append_tres([H|T], L, [H|R]) :-
-    append_tres(T, L, R).
+	group_bit_in_B(Lbits, LBytes).
 	
 % shift(List1?,List2?)
 % L2 is the left-shifted of L1 OR L1 is the rigth-shifted of L2. L1 and L2 lists.
@@ -206,7 +230,7 @@ add([Head|Tail],L1,[Head|L2]):-
 byte_list_crsh([Byte|L], ShiftedAndFormated) :-
 	%Si es binario.
 	binary_byte(Byte),
-	my_append([Byte|L],Lappended),
+	group_bit_in_B(Lappended,[Byte|L]),
 	shift(Shifted, Lappended),
 	group_bit_in_B(Shifted, ShiftedAndFormated).
 	
@@ -214,7 +238,7 @@ byte_list_crsh([Byte|L], ShiftedAndFormatedFromHex) :-
 	%Si es hexadecimal -> Pasamos a binario
 	hex_byte(Byte),
 	byte_list_conversion([Byte|L], BL),
-	my_append(BL,Lappended),
+	group_bit_in_B(Lappended, BL),
 	shift(Shifted, Lappended),
 	group_bit_in_B(Shifted, ShiftedAndFormated),
 	byte_list_conversion(ShiftedAndFormatedFromHex, ShiftedAndFormated).
