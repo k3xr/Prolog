@@ -1,8 +1,8 @@
                 *** Memoria Práctica 2 ***
 
 Integrantes del Grupo:
-	+ Oscar Fernández Miguel del Corral - S
-	+ Marco López de Miguel - S
+	+ Oscar Fernández Miguel del Corral - S100048
+	+ Marco López de Miguel - S100077
 	+ Enrique Ortiz Pasamontes - S100110
 
 Desarrollo de la práctica
