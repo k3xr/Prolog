@@ -17,12 +17,12 @@ Desarrollo de la práctica
 	Si cabe mencionar algún predicado en particular podemos destacar
 	a varios. Entre ellos está byte_conversion, no por su dificultad,
 	sino porque requería un nivel más profundo de comprensión para ver
-	que teníamos que definir (ampliar la base de hechos) la converión 
+	que teníamos que definir (ampliar la base de hechos) la conversión 
 	de cada uno de los nibbles en binario y hexadecimal.
 
 	También caben destacar las funciones xorshift_encrypt y 
 	xorshift_decrypt, ya que en lugar de implementar un predicado que
-	hiciese la operación and sobre un byte completo, acabamos 
+	hiciese la operación AND sobre un byte completo, acabamos 
 	implementando kbyteSel con toda la funcionalidad necesaria para
 	obtener el byte de la clave adecuado dependiendo de los tres bits
 	menos significativos del mensaje a encriptar.
