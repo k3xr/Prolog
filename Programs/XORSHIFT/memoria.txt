@@ -1,0 +1,41 @@
+                *** Memoria Práctica 2 ***
+
+Integrantes del Grupo:
+	+ Oscar Fernández Miguel del Corral - S
+	+ Marco López de Miguel - S
+	+ Enrique Ortiz Pasamontes - S100110
+
+Desarrollo de la práctica
+
+	En la realización de la práctica hemos optado por comenzar con los
+	predicados que no eran xorshift_encrypt ni xorshift_decrypt. El
+	motivo no es sólo que estos sean predicados obligatorios para la
+	práctica, sino que comprobamos que para poder realizar los 
+	elementos de encriptación podíamos beneficiarnos del trabajo hecho
+	en el resto de la práctica.
+
+	Si cabe mencionar algún predicado en particular podemos destacar
+	a varios. Entre ellos está byte_conversion, no por su dificultad,
+	sino porque requería un nivel más profundo de comprensión para ver
+	que teníamos que definir (ampliar la base de hechos) la converión 
+	de cada uno de los nibbles en binario y hexadecimal.
+
+	También caben destacar las funciones xorshift_encrypt y 
+	xorshift_decrypt, ya que en lugar de implementar un predicado que
+	hiciese la operación and sobre un byte completo, acabamos 
+	implementando kbyteSel con toda la funcionalidad necesaria para
+	obtener el byte de la clave adecuado dependiendo de los tres bits
+	menos significativos del mensaje a encriptar.
+
+	Por último queremos mencionar que el predicado byte_list_crsh,
+	para nosotros el más complejo de todos, es funcional cuando le
+	pedimos que nos busque una lista que cumpla el predicado para su
+	segundo elemento(desplazar los bits hacia la derecha). Sin embargo
+	cuando dejamos como variable el primer elemento del predicado,
+	para que nos busque la lista correspondiente con los bits 
+	desplazados hacia la izquierda respecto al segundo elemento, el
+	programa entra en un bucle infinito y no es capaz de resolver el
+	problema. Somos conscientes de que sería más correcto si el
+	predicado funcionase en ambos sentidos, pero por ello tenemos la
+	implementación de byte_list_clsh, con el cual se complementan
+	mutuamente.
