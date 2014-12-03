@@ -86,8 +86,8 @@ hex_byte([hexd(H1), hexd(H0)]) :-
 
 % xorshift_encrypt(ClearData, EncKey, EncData)
 xorshift_encrypt(ClearData, EncKey, EncData):-
-	byte_list(ClearData), %Lista de dos bytes
-	byte_list(EncKey),    %Lista de 8 Bytes
+	byte_list(ClearData), % Lista de dos bytes
+	byte_list(EncKey),    % Lista de 8 Bytes
 	encrypt(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(0)))))))))))))))),ClearData,EncKey,EncData).
 
 encrypt(s(0),[DByte1, DByte0],EncKey,EncData):-
@@ -96,14 +96,13 @@ encrypt(s(0),[DByte1, DByte0],EncKey,EncData):-
 	byte_list_crsh([DByte1RESULT, DByte0],EncData).
 
 encrypt(s(N),[DByte1, DByte0],EncKey,EncData):-
-	kbyteSel(EncKey, DByte0,KByteSEL),%En KByteSEL esta el byte de la clave a usar
+	kbyteSel(EncKey, DByte0,KByteSEL), % En KByteSEL esta el byte de la clave a usar
 	byte_xor(DByte1,KByteSEL,DByte1RESULT),
 	byte_list_crsh([DByte1RESULT, DByte0],ClearDataCirc),
 	encrypt(N,ClearDataCirc,EncKey,EncData).
 
-
-%Dividimos el procedimiento de seleccionar en subprocedimientos
-%Sólo se cumplirá uno de los procedimientos select_X
+% Dividimos el procedimiento de seleccionar en subprocedimientos
+% Sólo se cumplirá uno de los procedimientos select_X
 kbyteSel(EncKey,K,KByteSEL):-
 	select_0(EncKey,K,KByteSEL);
 	select_1(EncKey,K,KByteSEL);
@@ -114,7 +113,7 @@ kbyteSel(EncKey,K,KByteSEL):-
 	select_6(EncKey,K,KByteSEL);
 	select_7(EncKey,K,KByteSEL).
 
-%Comprobamos el caso concreto en el que N los tres primeros bits de N son 0 o 7.
+% Comprobamos el caso concreto en el que N los tres primeros bits de N son 0 o 7.
 select_0([_,_,_,_,_,_,_,K0],[_,N0],K0):- hex_0(N0);hex_8(N0).
 select_0([_,_,_,_,_,_,_,K0],[_,_,_,_,N3,N2,N1,N0],K0):- bin_0([N3,N2,N1,N0]);bin_8([N3,N2,N1,N0]).
 select_1([_,_,_,_,_,_,K1,_],[_,N0],K1):- hex_1(N0);hex_9(N0).
@@ -140,8 +139,8 @@ select_7([K7,_,_,_,_,_,_,_],[_,_,_,_,N3,N2,N1,N0],K7):- bin_7([N3,N2,N1,N0]);bin
 % todos los argumentos deben estar representados EN LA MISMA NOTACIÓN.
 
 xorshift_decrypt(EncData, EncKey, ClearData):-
-	byte_list(EncData),  %Lista de 2 bytes
-	byte_list(EncKey),   %Lista de 8 Bytes
+	byte_list(EncData),  % Lista de 2 bytes
+	byte_list(EncKey),   % Lista de 8 Bytes
 	decrypt(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(s(0)))))))))))))))),EncData,EncKey,ClearData).
 
 decrypt(0,EncData,_,EncData).
@@ -224,15 +223,15 @@ get_bit_turn([B7,B6,B5,B4,B3,B2,B1,B0],[B0,B1,B2,B3,B4,B5,B6,B7]).
 % En los desplazamientos circulares a la izquierda el bit más significativo del byte más significativo de la lista 
 % L pasa a ser el bit menos significativo del byte menos significativo de la lista CLShL.
 	
+% Si es binario.	
 byte_list_clsh([Byte|ByteList], ShiftedAndFormated) :-
-	%Si es binario.
 	binary_byte(Byte),
 	group_bit_in_B(LBits, [Byte|ByteList]),
 	shift(LBits, LbitsShiftados),
 	group_bit_in_B(LbitsShiftados, ShiftedAndFormated).
 
+% Si es hexadecimal -> Pasamos a binario
 byte_list_clsh([Byte|ByteList], ShiftedAndFormatedFromHex) :-
-	%Si es hexadecimal -> Pasamos a binario
 	hex_byte(Byte),
 	byte_list_conversion([Byte|ByteList], BL),
 	group_bit_in_B(LBits, BL),
@@ -240,13 +239,11 @@ byte_list_clsh([Byte|ByteList], ShiftedAndFormatedFromHex) :-
 	group_bit_in_B(LbitsShiftados, ShiftedAndFormated),
 	byte_list_conversion(ShiftedAndFormatedFromHex, ShiftedAndFormated).
 
-%*********************Auxiliar Methods for rotation purposes*************************	
 % Group 8 bytes in a list
 group_bit_in_B([],[]).
 group_bit_in_B([B7,B6,B5,B4,B3,B2,B1,B0|Lbits],[[B7,B6,B5,B4,B3,B2,B1,B0]|LBytes]):-
 	group_bit_in_B(Lbits, LBytes).
 	
-% shift(List1?,List2?)
 % L2 is the left-shifted of L1 OR L1 is the rigth-shifted of L2. L1 and L2 lists.
 shift(L1,L2):-
     del(L1,L3),
@@ -257,8 +254,6 @@ del([_|Tail],Tail).
 add([],[Head|_],[Head]).
 add([Head|Tail],L1,[Head|L2]):-
     add(Tail,L1,L2).
-%********************* FIN: Auxiliar Methods for rotation purposes*************************	
-
 	
 % byte_list_crsh/2: byte_list_crsh(L, CRShL).
 % Este predicado POLIMÓRFICO es cierto si CRShL es el resultado de efectuar un 
@@ -269,15 +264,15 @@ add([Head|Tail],L1,[Head|L2]):-
 % significativo de L pasa a ser el bit más significativo del byte mas significativo de 
 % la lista CRShL.
 
+% Si es binario.
 byte_list_crsh([Byte|L], ShiftedAndFormated) :-
-	%Si es binario.
 	binary_byte(Byte),
 	group_bit_in_B(Lappended,[Byte|L]),
 	shift(Shifted, Lappended),
 	group_bit_in_B(Shifted, ShiftedAndFormated).
-	
+
+% Si es hexadecimal -> Pasamos a binario	
 byte_list_crsh([Byte|L], ShiftedAndFormatedFromHex) :-
-	%Si es hexadecimal -> Pasamos a binario
 	hex_byte(Byte),
 	byte_list_conversion([Byte|L], BL),
 	group_bit_in_B(Lappended, BL),
