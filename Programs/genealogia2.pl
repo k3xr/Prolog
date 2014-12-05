@@ -1,7 +1,3 @@
-%Autores:
-%Marco López de Miguel, s100077
-%Oscar Fernandez Miguel del Corral, s100048
-
 :-module(_,_).
 
 %(1) Codifique utilizando este formato su propio árbol genealógico, incluyendo al menos los datos del alumno y sus herman@s, padres, tí@s, prim@s y abuel@s.

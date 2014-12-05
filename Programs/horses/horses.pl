@@ -35,7 +35,7 @@ salto_L_posible(N1, N2):-
 % board/9, Ej: board(black, empty, black, empty, empty, empty, white, empty, white)
 
 % move(Color, Origin, Destination)
-% representa la acción de mover un caballode color Color (variable que puede tomar uno 
+% representa la acción de mover un caballo de color Color (variable que puede tomar uno 
 % de los valores constantes black y white) desde la casilla Origin hasta la casilla 
 % Destination— que aplicadas secuencialmente desde el estado
 % inicial resuelven el problema propuesto
