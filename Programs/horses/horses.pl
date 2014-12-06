@@ -15,7 +15,6 @@ conexion_L(2,7).
 conexion_L(2,9).
 conexion_L(3,4).
 conexion_L(3,8).
-conexion_L(4,3).
 conexion_L(4,9).
 conexion_L(6,7). 
 
@@ -43,7 +42,15 @@ board(Pos1, Pos2, Pos3, Pos4, empty, Pos6, Pos7, Pos8, Pos9):-
 
 solve(Solution):-
 	Estado = board(black, empty, black, empty, empty, empty, white, empty, white), %Incilizamos la estructura
-	length(Solution, Iteraciones).
+	busca_sol(Solution).
+	
+busca_sol([]).
+busca_sol([H|Resto]):-
+	arg(1, H, Color),
+	arg(2, H, Origin),
+	arg(3, H, Destination),
+	move(Color, Origin, Destination),
+	busca_sol(Resto).
 
 
 % move(Color, Origin, Destination)
@@ -55,7 +62,7 @@ solve(Solution):-
 % Ej: de llamada 
 
 move(Color, Origin, Destination):-
-	conexion_L(Origin, Destination), %Movimientos posibles
+	salto_L_posible(Origin, Destination), %Movimientos posibles
 	Estado = board(black, empty, black, empty, empty, empty, white, empty, white), %PARA PROBAR move DE FORMA UNITARIA
 	Nuevo_Estado = board(_, _, _, _, empty, _, _, _, _),
 	arg(Origin, Estado, Color),  %Color en la posicion de origen
