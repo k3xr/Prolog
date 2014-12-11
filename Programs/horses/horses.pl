@@ -1,10 +1,12 @@
-%:-module(_,_).
+:-module(_,_).
 
 % Caso de la casilla
 black.
 white.
 empty.
 
+isColor(black).
+isColor(white).
 % Conexiones en L -> tenemos en cuenta que tenemos el siguiente grafo http://goo.gl/rETg7M
 % Estos son todos los movimientos que puede realizar un caballo. Para realizar la comprobación
 % de si son posibles estos movimientos creo que será necesario usar un or como: 
@@ -42,15 +44,44 @@ board(Pos1, Pos2, Pos3, Pos4, empty, Pos6, Pos7, Pos8, Pos9):-
 
 solve(Solution):-
 	Estado = board(black, empty, black, empty, empty, empty, white, empty, white), %Incilizamos la estructura
-	busca_sol(Solution).
-	
-busca_sol([]).
-busca_sol([H|Resto]):-
-	arg(1, H, Color),
-	arg(2, H, Origin),
-	arg(3, H, Destination),
-	move(Color, Origin, Destination),
-	busca_sol(Resto).
+	busca_sol(Solution,Estado,[]).
+
+
+%busca_sol(A,board(white, empty, empty, empty, empty, empty, black, white, black)).
+%busca_sol(A,board(white, empty, empty, empty, empty, empty, empty, empty, empty),[]).
+%Esta es la condición de parada. Que estado actual sea el que pone ahí en board	
+busca_sol([],EstadoActual,_):-
+EstadoActual = board(white, empty, white, empty, empty, empty, black, empty, black).
+%EstadoActual = board(empty, empty, empty, empty, empty, empty, empty, white, empty).
+
+busca_sol([H|Resto],EstadoActual,EstadosAnteriores):-
+	salto_L_posible(Origin, Destination), %Movimientos posibles
+	H=move(Color,Origin,Destination), %H es una estructura move/3
+	arg(Origin, EstadoActual, Color),  %Color en la posicion de origen
+	isColor(Color), %Comprobamos que lo que hemos cogido es un caballo
+	arg(Destination, EstadoActual, empty), %Posicion destino libre
+	Nuevo_Estado = board(_, _, _, _, empty, _, _, _, _), %Nuevo_Estado es una estructura board
+	arg(Origin, Nuevo_Estado, empty), %Origen ahora libre
+	arg(Destination, Nuevo_Estado, Color), %Destino ahora con caballo Color
+	%Se actualizan el resto de posiciones, a excepcion de donde estaba el caballo y donde esta ahora.
+	actualiza_board(9, Origin, Destination, EstadoActual, Nuevo_Estado),
+	%Comprobamos que no hayamos estado en el estado al que pretendemos transitar
+	\+member(Nuevo_Estado,EstadosAnteriores),
+	append(EstadosAnteriores,[EstadoActual],NuevosEstadosAnteriores),
+	busca_sol(Resto,Nuevo_Estado,NuevosEstadosAnteriores).
+
+busca_sol([H|Resto],EstadoActual,[]):-
+	salto_L_posible(Origin, Destination), %Movimientos posibles
+	H=move(Color,Origin,Destination),
+	arg(Origin, EstadoActual, Color),  %Color en la posicion de origen
+	isColor(Color), %Comprobamos que lo que hemos cogido es un caballo
+	arg(Destination, EstadoActual, empty), %Posicion destino libre
+	Nuevo_Estado = board(_, _, _, _, empty, _, _, _, _),
+	arg(Origin, Nuevo_Estado, empty), %Origen ahora libre
+	arg(Destination, Nuevo_Estado, Color), %Destino ahora con caballo Color
+	%Se actualizan el resto de posiciones, a excepcion de donde estaba el caballo y donde esta ahora.
+	actualiza_board(9, Origin, Destination, EstadoActual, Nuevo_Estado),
+	busca_sol(Resto,Nuevo_Estado,[EstadoActual]).
 
 
 % move(Color, Origin, Destination)
@@ -59,18 +90,24 @@ busca_sol([H|Resto]):-
 % Destination— que aplicadas secuencialmente desde el estado
 % inicial resuelven el problema propuesto
 
-% Ej: de llamada 
 
+% Ej: de llamada 
 move(Color, Origin, Destination):-
-	salto_L_posible(Origin, Destination), %Movimientos posibles
-	Estado = board(black, empty, black, empty, empty, empty, white, empty, white), %PARA PROBAR move DE FORMA UNITARIA
-	Nuevo_Estado = board(_, _, _, _, empty, _, _, _, _),
-	arg(Origin, Estado, Color),  %Color en la posicion de origen
-	arg(Destination, Estado, empty), %Posicion destino libre
-	arg(Origin, Nuevo_Estado, empty), %Origen ahora libre
-	arg(Destination, Nuevo_Estado, Color), %Destino ahora con caballo Color
+Color,
+Origin,
+Destination.
+
+
+%move(Color, Origin, Destination):-
+%	salto_L_posible(Origin, Destination), %Movimientos posibles
+	%Estado = board(black, empty, black, empty, empty, empty, white, empty, white), %PARA PROBAR move DE FORMA UNITARIA
+%	Nuevo_Estado = board(_, _, _, _, empty, _, _, _, _),
+%	arg(Origin, Estado, Color),  %Color en la posicion de origen
+%	arg(Destination, Estado, empty), %Posicion destino libre
+%	arg(Origin, Nuevo_Estado, empty), %Origen ahora libre
+%	arg(Destination, Nuevo_Estado, Color), %Destino ahora con caballo Color
 	%Se actualizan el resto de posiciones, a excepcion de donde estaba el caballo y donde esta ahora.
-	actualiza_board(9, Origin, Destination, Estado, Nuevo_Estado). 
+%	actualiza_board(9, Origin, Destination, Estado, Nuevo_Estado). 
 
 actualiza_board(0, _, _, _, _).
 actualiza_board(N, Origen, Destino, Board, Nuevo_Board) :- 
