@@ -46,14 +46,9 @@ solve(Solution):-
 	Estado = board(black, empty, black, empty, empty, empty, white, empty, white), %Incilizamos la estructura
 	busca_sol(Solution,Estado,[]).
 
-
-%busca_sol(A,board(white, empty, empty, empty, empty, empty, black, white, black)).
-%busca_sol(A,board(white, empty, empty, empty, empty, empty, empty, empty, empty),[]).
 %Esta es la condición de parada. Que estado actual sea el que pone ahí en board	
 busca_sol([],EstadoActual,_):-
-EstadoActual = board(white, empty, white, empty, empty, empty, black, empty, black).
-%EstadoActual = board(empty, empty, empty, empty, empty, empty, empty, white, empty).
-
+	EstadoActual = board(white, empty, white, empty, empty, empty, black, empty, black).
 busca_sol([H|Resto],EstadoActual,EstadosAnteriores):-
 	salto_L_posible(Origin, Destination), %Movimientos posibles
 	H=move(Color,Origin,Destination), %H es una estructura move/3
@@ -85,29 +80,11 @@ busca_sol([H|Resto],EstadoActual,[]):-
 
 
 % move(Color, Origin, Destination)
-% representa la acción de mover un caballo de color Color (variable que puede tomar uno 
-% de los valores constantes black y white) desde la casilla Origin hasta la casilla 
-% Destination— que aplicadas secuencialmente desde el estado
-% inicial resuelven el problema propuesto
-
-
-% Ej: de llamada 
+% representa la acción de mover un caballo
 move(Color, Origin, Destination):-
-Color,
-Origin,
-Destination.
-
-
-%move(Color, Origin, Destination):-
-%	salto_L_posible(Origin, Destination), %Movimientos posibles
-	%Estado = board(black, empty, black, empty, empty, empty, white, empty, white), %PARA PROBAR move DE FORMA UNITARIA
-%	Nuevo_Estado = board(_, _, _, _, empty, _, _, _, _),
-%	arg(Origin, Estado, Color),  %Color en la posicion de origen
-%	arg(Destination, Estado, empty), %Posicion destino libre
-%	arg(Origin, Nuevo_Estado, empty), %Origen ahora libre
-%	arg(Destination, Nuevo_Estado, Color), %Destino ahora con caballo Color
-	%Se actualizan el resto de posiciones, a excepcion de donde estaba el caballo y donde esta ahora.
-%	actualiza_board(9, Origin, Destination, Estado, Nuevo_Estado). 
+	Color,
+	Origin,
+	Destination.
 
 actualiza_board(0, _, _, _, _).
 actualiza_board(N, Origen, Destino, Board, Nuevo_Board) :- 
