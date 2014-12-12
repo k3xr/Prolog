@@ -1,4 +1,4 @@
-%:-module(_,_).
+:-module(_,_).
 
 % Caso de la casilla
 black.
