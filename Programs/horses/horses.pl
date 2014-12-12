@@ -1,4 +1,4 @@
-:-module(_,_).
+%:-module(_,_).
 
 % Caso de la casilla
 black.
@@ -43,12 +43,12 @@ board(Pos1, Pos2, Pos3, Pos4, empty, Pos6, Pos7, Pos8, Pos9):-
 % solve/1, solve(Solution)
 
 solve(Solution):-
-	Estado = board(black, empty, black, empty, empty, empty, white, empty, white), %Incilizamos la estructura
-	busca_sol(Solution,Estado,[]).
+	busca_sol(Solution,board(black, empty, black, empty, empty, empty, white, empty, white),[]).
 
 %Esta es la condición de parada. Que estado actual sea el que pone ahí en board	
 busca_sol([],EstadoActual,_):-
-	EstadoActual = board(white, empty, white, empty, empty, empty, black, empty, black).
+	EstadoActual = board(white, empty, white, empty, empty, empty, black, empty, black),!.
+	
 busca_sol([H|Resto],EstadoActual,EstadosAnteriores):-
 	salto_L_posible(Origin, Destination), %Movimientos posibles
 	H=move(Color,Origin,Destination), %H es una estructura move/3
@@ -64,19 +64,6 @@ busca_sol([H|Resto],EstadoActual,EstadosAnteriores):-
 	\+member(Nuevo_Estado,EstadosAnteriores),
 	append(EstadosAnteriores,[EstadoActual],NuevosEstadosAnteriores),
 	busca_sol(Resto,Nuevo_Estado,NuevosEstadosAnteriores).
-
-busca_sol([H|Resto],EstadoActual,[]):-
-	salto_L_posible(Origin, Destination), %Movimientos posibles
-	H=move(Color,Origin,Destination),
-	arg(Origin, EstadoActual, Color),  %Color en la posicion de origen
-	isColor(Color), %Comprobamos que lo que hemos cogido es un caballo
-	arg(Destination, EstadoActual, empty), %Posicion destino libre
-	Nuevo_Estado = board(_, _, _, _, empty, _, _, _, _),
-	arg(Origin, Nuevo_Estado, empty), %Origen ahora libre
-	arg(Destination, Nuevo_Estado, Color), %Destino ahora con caballo Color
-	%Se actualizan el resto de posiciones, a excepcion de donde estaba el caballo y donde esta ahora.
-	actualiza_board(9, Origin, Destination, EstadoActual, Nuevo_Estado),
-	busca_sol(Resto,Nuevo_Estado,[EstadoActual]).
 
 
 % move(Color, Origin, Destination)
