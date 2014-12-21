@@ -1,0 +1,39 @@
+                *** Memoria Práctica 2 ***
+
+Integrantes del Grupo:
+	+ Oscar Fernández Miguel del Corral - S100048
+	+ Marco López de Miguel - S100077
+	+ Enrique Ortiz Pasamontes - S100110
+
+Desarrollo de la práctica
+
+En esta última práctica hemos tenido claro desde el principio qué
+forma debía de tener el algoritmo para que funcionase correctamente.
+
+Los pasos que emplea el algoritmo son los siguientes:
+	
+	-Búsqueda de posibles movimientos a realizar según el estado
+		actual del tablero.
+	
+	-Aplicación de uno de estos movimientos.
+	
+	-Comprobación de que tras este movimiento no acabamos en un estado
+		que ya habíamos visiado antes. Esta comprobación es importante
+		para evitar entrar en un bucle donde siempre se aplican los
+		mismos movimientos consecutivamnte sin llegar a ninguna solución.
+	
+	-Si el movimiento es válido llamamos recursivamente al algoritmo
+		añadiendo el estado del tablero que dejamos en la lista de
+		estados anteriores que hemos visitado.
+
+De todas estas partes, las que nos ha costado implementar un poco más
+ha sido la aplicación de un movimiento en el tablero. Esto es debido a
+que el algoritmo debe de ser capaz de valer para todos los posibles
+movimientos que se realicen, por ello no creemos que la solución a la
+que hemos llegado sea la más eficiente pero sí que estamos seguros de
+que es correcta.
+
+Otro problema que tuvimos fue la correcta implementación del algoritmo
+principal, que en un principio entraba en un bucle infinito. Pero tras
+realizar las comprobaciones necesarias en el funtor buscaSol/3 esto ya
+no es un problema.

@@ -57,9 +57,9 @@ EstadoActual = board(white,empty,white,empty,empty,empty,black,empty,black).
 
 buscaSol([Solucion|Resto],EstadoActual,EstadosAnteriores):-
 \+member(board(white,empty,white,empty,empty,empty,black,empty,black),EstadosAnteriores),
-saltoPosible(EstadoActual,Salto), %No repite
-actualizaBoard(Salto ,EstadoActual,EstadoFuturo), %no repite
-\+member(EstadoFuturo,EstadosAnteriores), %No parece el error
+saltoPosible(EstadoActual,Salto),
+actualizaBoard(Salto ,EstadoActual,EstadoFuturo),
+\+member(EstadoFuturo,EstadosAnteriores),
 Solucion=Salto, %Como el salto escogido es bueno, lo damos como solución
 buscaSol(Resto,EstadoFuturo,[EstadoActual|EstadosAnteriores]).
 
@@ -74,7 +74,7 @@ arg(F,EstadoActual,empty), %Comprobamos que el movimiento está permitido
 Salto = move(Box,N,F).
 
 
-%Nos devuelve el nuevo estado a que transitamos
+%Nos devuelve el nuevo estado al que transitamos
 actualizaBoard(Salto,EstadoActual, EstadoFuturo):-
 arg(2,Salto,Origen), arg(3,Salto,Destino),
 functor(EstadoActual, board,9),functor(EstadoFuturo, board,9),
