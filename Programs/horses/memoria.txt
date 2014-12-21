@@ -1,4 +1,4 @@
-                *** Memoria Práctica 2 ***
+﻿                *** Memoria Práctica 2 ***
 
 Integrantes del Grupo:
 	+ Oscar Fernández Miguel del Corral - S100048
@@ -18,9 +18,9 @@ Los pasos que emplea el algoritmo son los siguientes:
 	-Aplicación de uno de estos movimientos.
 	
 	-Comprobación de que tras este movimiento no acabamos en un estado
-		que ya habíamos visiado antes. Esta comprobación es importante
+		que ya habíamos visitado antes. Esta comprobación es importante
 		para evitar entrar en un bucle donde siempre se aplican los
-		mismos movimientos consecutivamnte sin llegar a ninguna solución.
+		mismos movimientos consecutivamente sin llegar a ninguna solución.
 	
 	-Si el movimiento es válido llamamos recursivamente al algoritmo
 		añadiendo el estado del tablero que dejamos en la lista de
@@ -35,5 +35,5 @@ que es correcta.
 
 Otro problema que tuvimos fue la correcta implementación del algoritmo
 principal, que en un principio entraba en un bucle infinito. Pero tras
-realizar las comprobaciones necesarias en el funtor buscaSol/3 esto ya
+realizar las comprobaciones necesarias en el functor buscaSol/3 esto ya
 no es un problema.
